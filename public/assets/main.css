@@ -1,0 +1,48 @@
+body {
+    font-family: Arial, sans-serif;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+}
+
+a {
+    text-decoration: none !important;
+}
+
+.background-fon {
+    background: url("../uploads/images/thumb-1920-Obito.jpg") no-repeat center center;
+    height: 78vh;
+    width: 100%;
+}
+
+#header nav {
+    background: rgba(50, 140, 255, 0.3);
+    display: flex;
+    width: 100%;
+}
+
+#header nav .navbar-brand {
+    display: flex;
+    margin: 0 10px;
+    padding: 2px 10px;
+}
+
+#header nav .menu {
+    display: flex;
+    justify-content: space-between;
+    margin: 0 !important;
+    padding: 10px 100px;
+    width: 50%;
+}
+
+#header nav .menu li {
+    display: inline-block;
+}
+
+#header nav .menu li a {
+    color: gold;
+    font-size: 19px;
+    font-weight: 700;
+}
