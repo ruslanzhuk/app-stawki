@@ -16,14 +16,49 @@
         <button type="submit" value="submit">Calculate needed amount of money</button>
     </form>
     @if(isset($result))
-        <p>You need at least {{ ($result < 0 ? 0 - $result : 0) + $_POST["money"] }} to take part in this season</p>
+        <p>You need at least {{ $result /*($result < 0 ? 0 - $result : 0) + $_POST["money"]*/ }} to take part in this season</p>
     @endif
     @if(isset($matches))
-        <?php dump($matches) ?>
-        <?php dump($test_arr) ?>
-        <?php dump($team) ?>
-        <?php dump($money) ?>
+<!--        --><?php ////dump($team) ?><!----><!---->
+<!--        --><?php //////echo "Stawki"; dump($test_arr2) ?><!----><!----><!---->
+<!--        --><?php ////////dump($money) ?><!----><!----><!----><!---->
+<!--        --><?php //////////dump($matches[0]->getAttributes()) ?><!----><!----><!----><!----><!---->
+{{--    <?php dump($matches) ?>--}}
 
+        <table>
+            <tr class="fields">
+                @foreach($matches[0]->getAttributes() as $field => $value)
+                    @if($field != "created_at" && $field != "updated_at")
+                        @if($field == "coefficient_team_first")
+                            <td>1</td>
+                        @elseif($field == "coefficient_team_second")
+                            <td>2</td>
+                        @elseif($field == "coefficient_draw")
+                            <td>X</td>
+                        @elseif($field == "team_first_goals")
+                            <td>team A goals</td>
+                        @elseif($field == "team_second_goals")
+                            <td>team B goals</td>
+                        @else
+                            <td>{{ $field }}</td>
+                        @endif
+                    @endif
+                @endforeach
+                <td>Stawka</td>
+                <td>Money+</td>
+            </tr>
+            @foreach($matches as $fmatch)
+                <tr>
+                    @foreach($fmatch->getAttributes() as $field => $value)
+                        @if($field != "created_at" && $field != "updated_at")
+                            <td>{{ $value }}</td>
+                        @endif
+                    @endforeach
+                    <td>{{ $test_arr2[$fmatch->getAttributes()["match_id"] - 1] }}</td>
+                    <td>{{ $test_arr[$fmatch->getAttributes()["match_id"] - 1] }}</td>
+                </tr>
+            @endforeach
+        </table>
     @endif
 @endsection
 

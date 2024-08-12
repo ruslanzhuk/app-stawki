@@ -16,9 +16,12 @@ class HomeController
         $team = $_POST['team'];
         $money = $_POST['money']; //300
         $test_arr = [];
+        $test_arr2 = [];
+        $test_arr3 = [];
         $result = 0;
         $total_money = 0; //0
         $viktory = true;
+        $sum = 0;
 
         $matches = FootballMatch::where('team_first', $team)
             ->orWhere('team_second', $team)
@@ -49,7 +52,7 @@ class HomeController
                     }
                 }
             } else {
-                $money = $_POST['money']; //300 //300 //300
+                $money = (int)$_POST['money']; //300 //300 //300
                 $result = 0;
                 $team_first = $fmatch->team_first;
                 if ($team_first == $team) {
@@ -60,6 +63,7 @@ class HomeController
                             $needed_money = $i + 1; // 1129
                         }
                         $money = $needed_money + 100; //1129+100=1229
+                        $sum += $money;
                     }
                     if ($fmatch->team_first_goals > $fmatch->team_second_goals) {
                         $result += $this->win_game($money, $fmatch->coefficient_team_first); //363 //1487
@@ -74,10 +78,11 @@ class HomeController
                     if (!$viktory && $total_money < 0) {
                         $coefficient = $fmatch->coefficient_team_second; //1.21 //1.21 //1.21
                         $needed_money = 0;
-                        for ($i = 1; $i * $coefficient < $total_money + $i; $i++) {
+                        for ($i = 1; $i * $coefficient < $i - $total_money; $i++) {
                             $needed_money = $i; // 1129
                         }
                         $money = $needed_money + 100; //1129+100=1229
+                        $sum += $money;
                     }
                     if ($fmatch->team_second_goals > $fmatch->team_first_goals) {
                         $result += $this->win_game($money, $fmatch->coefficient_team_second); //363 //1487
@@ -90,10 +95,14 @@ class HomeController
                     }
                 }
             }
+            array_push($test_arr2, $money);
             array_push($test_arr, $total_money);
+            array_push($test_arr3, $sum);
         }
 
-        return view('home.index', ['matches' => $matches, 'team' => $team, 'money' => $money, 'test_arr' => $test_arr, 'result' => $total_money]);
+        $sum = $sum + $_POST["money"];
+
+        return view('home.index', ['matches' => $matches, 'team' => $team, 'money' => $money, 'test_arr' => $test_arr, 'test_arr2' => $test_arr2, 'test_arr3' => $test_arr3, 'result' => $sum]);
     }
 
     public function win_game($money, $coefficient)

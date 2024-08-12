@@ -46,3 +46,17 @@ a {
     font-size: 19px;
     font-weight: 700;
 }
+
+table {
+    width: 100%;
+}
+
+table, table tr, table td {
+    border: 1px solid #000;
+    text-align: center;
+}
+
+table td {
+    font-size: 15px;
+    padding: 3px 7px;
+}
