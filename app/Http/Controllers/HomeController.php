@@ -22,6 +22,7 @@ class HomeController
         $total_money = 0; //0
         $viktory = true;
         $sum = 0;
+        $umhave = 0;
 
         $matches = FootballMatch::where('team_first', $team)
             ->orWhere('team_second', $team)
@@ -29,26 +30,97 @@ class HomeController
             //->limit(3)
             ->get();
 
+//        foreach ($matches as $fmatch) {
+//            if($fmatch == $matches[count($matches) - 1] && $total_money > 2) {
+//                $money = $total_money / 2;
+//                $result = 0;
+//                $team_first = $fmatch->team_first;
+//                if ($team_first == $team) {
+//                    if ($fmatch->team_first_goals > $fmatch->team_second_goals) {
+//                        $result += $this->win_game($money, $fmatch->coefficient_team_first); //363 //1487
+//                        $total_money += $result - $money; //363-300=63 //-237+1487-1229=21
+//                    } else {
+//                        $result += $this->lose_game($money); //-300
+//                        $total_money += $result; //-237
+//                    }
+//                } else {
+//                    if ($fmatch->team_second_goals > $fmatch->team_first_goals) {
+//                        $result += $this->win_game($money, $fmatch->coefficient_team_second); //363 //1487
+//                        $total_money += $result - $money; //363-300=63 //-237+1487-1229=21
+//                    } else {
+//                        $result += $this->lose_game($money); //-300
+//                        $total_money += $result; //-237
+//                    }
+//                }
+//            } else {
+//                $money = (int)$_POST['money']; //300 //300 //300
+//                $result = 0;
+//                $team_first = $fmatch->team_first;
+//                if ($team_first == $team) {
+//                    if (!$viktory && $total_money < 0) {
+//                        $coefficient = $fmatch->coefficient_team_first; //1.21 //1.21 //1.21
+//                        $needed_money = 0;
+//                        for ($i = 1; $i * $coefficient < $i - $total_money; $i++) {
+//                            $needed_money = $i + 1; // 1129
+//                        }
+//                        $money = $needed_money + 100; //1129+100=1229
+//                        $sum += $money;
+//                    }
+//                    if ($fmatch->team_first_goals > $fmatch->team_second_goals) {
+//                        $result += $this->win_game($money, $fmatch->coefficient_team_first); //363 //1487
+//                        $total_money += $result - $money; //363-300=63 //-237+1487-1229=21
+//                        $viktory = true;
+//                    } else {
+//                        $result += $this->lose_game($money); //-300
+//                        $total_money += $result; //-237
+//                        $viktory = false;
+//                    }
+//                } else {
+//                    if (!$viktory && $total_money < 0) {
+//                        $coefficient = $fmatch->coefficient_team_second; //1.21 //1.21 //1.21
+//                        $needed_money = 0;
+//                        for ($i = 1; $i * $coefficient < $i - $total_money; $i++) {
+//                            $needed_money = $i; // 1129
+//                        }
+//                        $money = $needed_money + 100; //1129+100=1229
+//                        $sum += $money;
+//                    }
+//                    if ($fmatch->team_second_goals > $fmatch->team_first_goals) {
+//                        $result += $this->win_game($money, $fmatch->coefficient_team_second); //363 //1487
+//                        $total_money += $result - $money; //363-300=63 //-237+1487-1229=21
+//                        $viktory = true;
+//                    } else {
+//                        $result += $this->lose_game($money); //-300
+//                        $total_money += $result; //-237
+//                        $viktory = false;
+//                    }
+//                }
+//            }
+//            array_push($test_arr2, $money);
+//            array_push($test_arr, $total_money);
+//            array_push($test_arr3, $sum);
+//        }
+
         foreach ($matches as $fmatch) {
-            if($fmatch == $matches[count($matches) - 1] && $total_money > 2) {
-                $money = $total_money / 2;
+            if($fmatch == $matches[count($matches) - 1] && $sum == 0) {
+                $money = (int)$_POST["money"];
                 $result = 0;
                 $team_first = $fmatch->team_first;
                 if ($team_first == $team) {
                     if ($fmatch->team_first_goals > $fmatch->team_second_goals) {
                         $result += $this->win_game($money, $fmatch->coefficient_team_first); //363 //1487
-                        $total_money += $result - $money; //363-300=63 //-237+1487-1229=21
+                        $total_money += $result - $money + $sum; //363-300=63 //-237+1487-1229=21
                     } else {
                         $result += $this->lose_game($money); //-300
-                        $total_money += $result; //-237
+                        $sum += $result; //-237
                     }
                 } else {
                     if ($fmatch->team_second_goals > $fmatch->team_first_goals) {
                         $result += $this->win_game($money, $fmatch->coefficient_team_second); //363 //1487
-                        $total_money += $result - $money; //363-300=63 //-237+1487-1229=21
+                        $total_money += $result - $money + $sum; //363-300=63 //-237+1487-1229=21
                     } else {
                         $result += $this->lose_game($money); //-300
-                        $total_money += $result; //-237
+                        $sum += $result; //-237
                     }
                 }
             } else {
@@ -56,53 +128,55 @@ class HomeController
                 $result = 0;
                 $team_first = $fmatch->team_first;
                 if ($team_first == $team) {
-                    if (!$viktory && $total_money < 0) {
+                    if (!$viktory) {
                         $coefficient = $fmatch->coefficient_team_first; //1.21 //1.21 //1.21
                         $needed_money = 0;
-                        for ($i = 1; $i * $coefficient < $i - $total_money; $i++) {
+                        for ($i = 1; $i * $coefficient < $i - $sum; $i++) {
                             $needed_money = $i + 1; // 1129
                         }
                         $money = $needed_money + 100; //1129+100=1229
-                        $sum += $money;
+                        $umhave += $money;
                     }
                     if ($fmatch->team_first_goals > $fmatch->team_second_goals) {
                         $result += $this->win_game($money, $fmatch->coefficient_team_first); //363 //1487
-                        $total_money += $result - $money; //363-300=63 //-237+1487-1229=21
+                        $total_money += $result - $money + $sum; //363-300=63 //-237+1487-1229=21
                         $viktory = true;
+                        $sum = 0;
                     } else {
                         $result += $this->lose_game($money); //-300
-                        $total_money += $result; //-237
+                        $sum += $result; //-237
                         $viktory = false;
                     }
                 } else {
-                    if (!$viktory && $total_money < 0) {
+                    if (!$viktory) {
                         $coefficient = $fmatch->coefficient_team_second; //1.21 //1.21 //1.21
                         $needed_money = 0;
-                        for ($i = 1; $i * $coefficient < $i - $total_money; $i++) {
+                        for ($i = 1; $i * $coefficient < $i - $sum; $i++) {
                             $needed_money = $i; // 1129
                         }
                         $money = $needed_money + 100; //1129+100=1229
-                        $sum += $money;
+                        $umhave += $money;
                     }
                     if ($fmatch->team_second_goals > $fmatch->team_first_goals) {
                         $result += $this->win_game($money, $fmatch->coefficient_team_second); //363 //1487
-                        $total_money += $result - $money; //363-300=63 //-237+1487-1229=21
+                        $total_money += $result - $money + $sum; //363-300=63 //-237+1487-1229=21
                         $viktory = true;
+                        $sum = 0;
                     } else {
                         $result += $this->lose_game($money); //-300
-                        $total_money += $result; //-237
+                        $sum += $result; //-237
                         $viktory = false;
                     }
                 }
             }
-            array_push($test_arr2, $money);
             array_push($test_arr, $total_money);
+            array_push($test_arr2, $money);
             array_push($test_arr3, $sum);
         }
 
-        $sum = $sum + $_POST["money"];
+        $umhave = $umhave + $_POST["money"];
 
-        return view('home.index', ['matches' => $matches, 'team' => $team, 'money' => $money, 'test_arr' => $test_arr, 'test_arr2' => $test_arr2, 'test_arr3' => $test_arr3, 'result' => $sum]);
+        return view('home.index', ['matches' => $matches, 'team' => $team, 'money' => $money, 'test_arr' => $test_arr, 'test_arr2' => $test_arr2, 'test_arr3' => $test_arr3, 'result' => $umhave]);
     }
 
     public function win_game($money, $coefficient)

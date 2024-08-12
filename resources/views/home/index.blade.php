@@ -17,12 +17,14 @@
     </form>
     @if(isset($result))
         <p>You need at least {{ $result /*($result < 0 ? 0 - $result : 0) + $_POST["money"]*/ }} to take part in this season</p>
+        <p>Then You will get {{ $test_arr[count($test_arr) - 1] }} $ </p>
+        @if($test_arr3[count($test_arr3) - 1] < 0) <p>But you lost last bet and now you haven't {{ $test_arr3[count($test_arr3) - 1] }} bucks in your pocket :-) </p> @endif
     @endif
     @if(isset($matches))
 <!--        --><?php ////dump($team) ?><!----><!---->
-<!--        --><?php //////echo "Stawki"; dump($test_arr2) ?><!----><!----><!---->
-<!--        --><?php ////////dump($money) ?><!----><!----><!----><!---->
-<!--        --><?php //////////dump($matches[0]->getAttributes()) ?><!----><!----><!----><!----><!---->
+<!--               --><?php //echo "Borg"; dump($test_arr3) ?><!---->
+<!--        --><?php //////////dump($money) ?><!----><!----><!----><!----><!---->
+<!--        --><?php ////////////dump($matches[0]->getAttributes()) ?><!----><!----><!----><!----><!----><!---->
 {{--    <?php dump($matches) ?>--}}
 
         <table>
