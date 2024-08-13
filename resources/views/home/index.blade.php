@@ -17,8 +17,8 @@
     </form>
     @if(isset($result))
         <p>You need at least {{ $result /*($result < 0 ? 0 - $result : 0) + $_POST["money"]*/ }} to take part in this season</p>
-        <p>Then You will get {{ $test_arr[count($test_arr) - 1] }} $ </p>
-        @if($test_arr3[count($test_arr3) - 1] < 0) <p>But you lost last bet and now you haven't {{ $test_arr3[count($test_arr3) - 1] }} bucks in your pocket :-) </p> @endif
+        <p>Then You will get {{ max($test_arr) }} $ </p>
+        @if($test_arr3[max(array_keys($test_arr3))] < 0) <p>But you lost last bet and now you haven't {{ $test_arr3[max(array_keys($test_arr3))]  }} bucks in your pocket :-) </p> @endif
     @endif
     @if(isset($matches))
 <!--        --><?php ////dump($team) ?><!----><!---->
@@ -50,14 +50,19 @@
                 <td>Money+</td>
             </tr>
             @foreach($matches as $fmatch)
+
                 <tr>
                     @foreach($fmatch->getAttributes() as $field => $value)
                         @if($field != "created_at" && $field != "updated_at")
                             <td>{{ $value }}</td>
                         @endif
                     @endforeach
-                    <td>{{ $test_arr2[$fmatch->getAttributes()["match_id"] - 1] }}</td>
-                    <td>{{ $test_arr[$fmatch->getAttributes()["match_id"] - 1] }}</td>
+                    @if($test_arr2[$fmatch->getAttributes()["match_date"]] == max($test_arr2))
+                            <td style="background: red; color: white">{{ $test_arr2[$fmatch->getAttributes()["match_date"]] }}</td>
+                    @else
+                            <td>{{ $test_arr2[$fmatch->getAttributes()["match_date"]] }}</td>
+                    @endif
+                    <td>{{ $test_arr[$fmatch->getAttributes()["match_date"]] }}</td>
                 </tr>
             @endforeach
         </table>

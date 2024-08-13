@@ -27,6 +27,7 @@ class HomeController
         $matches = FootballMatch::where('team_first', $team)
             ->orWhere('team_second', $team)
             ->where('season', "2023/2024")
+            ->orderBy("match_date")
             //->limit(3)
             ->get();
 
@@ -101,7 +102,8 @@ class HomeController
 //            array_push($test_arr3, $sum);
 //        }
 
-        foreach ($matches as $fmatch) {
+
+        foreach ($matches as $fmatch)    {
             if($fmatch == $matches[count($matches) - 1] && $sum == 0) {
                 $money = (int)$_POST["money"];
                 $result = 0;
@@ -169,9 +171,12 @@ class HomeController
                     }
                 }
             }
-            array_push($test_arr, $total_money);
-            array_push($test_arr2, $money);
-            array_push($test_arr3, $sum);
+            $test_arr[$fmatch->match_date] = $total_money;
+            $test_arr2[$fmatch->match_date] = $money;
+            $test_arr3[$fmatch->match_date] = $sum;
+//            array_push($test_arr, $total_money);
+//            array_push($test_arr2, $money);
+//            array_push($test_arr3, $sum);
         }
 
         $umhave = $umhave + $_POST["money"];
