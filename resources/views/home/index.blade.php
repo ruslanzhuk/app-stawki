@@ -16,7 +16,7 @@
         <button type="submit" value="submit">Calculate needed amount of money</button>
     </form>
     @if(isset($result))
-        <p>You need at least {{ $result /*($result < 0 ? 0 - $result : 0) + $_POST["money"]*/ }} to take part in this season</p>
+        <p>You need at least {{ max($test_arr4) + $_POST["money"] /*($result < 0 ? 0 - $result : 0) + $_POST["money"]*/ }} to take part in this season</p>
         <p>Then You will get {{ max($test_arr) }} $ </p>
         @if($test_arr3[max(array_keys($test_arr3))] < 0) <p>But you lost last bet and now you haven't {{ $test_arr3[max(array_keys($test_arr3))]  }} bucks in your pocket :-) </p> @endif
     @endif

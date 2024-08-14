@@ -18,6 +18,7 @@ class HomeController
         $test_arr = [];
         $test_arr2 = [];
         $test_arr3 = [];
+        $test_arr4 = [];
         $result = 0;
         $total_money = 0; //0
         $viktory = true;
@@ -143,6 +144,8 @@ class HomeController
                         $result += $this->win_game($money, $fmatch->coefficient_team_first); //363 //1487
                         $total_money += $result - $money + $sum; //363-300=63 //-237+1487-1229=21
                         $viktory = true;
+                        array_push($test_arr4, $umhave);
+                        $umhave = 0;
                         $sum = 0;
                     } else {
                         $result += $this->lose_game($money); //-300
@@ -163,6 +166,8 @@ class HomeController
                         $result += $this->win_game($money, $fmatch->coefficient_team_second); //363 //1487
                         $total_money += $result - $money + $sum; //363-300=63 //-237+1487-1229=21
                         $viktory = true;
+                        array_push($test_arr4, $umhave);
+                        $umhave = 0;
                         $sum = 0;
                     } else {
                         $result += $this->lose_game($money); //-300
@@ -181,7 +186,7 @@ class HomeController
 
         $umhave = $umhave + $_POST["money"];
 
-        return view('home.index', ['matches' => $matches, 'team' => $team, 'money' => $money, 'test_arr' => $test_arr, 'test_arr2' => $test_arr2, 'test_arr3' => $test_arr3, 'result' => $umhave]);
+        return view('home.index', ['matches' => $matches, 'team' => $team, 'money' => $money, 'test_arr' => $test_arr, 'test_arr2' => $test_arr2, 'test_arr3' => $test_arr3, 'test_arr4' => $test_arr4, 'result' => $umhave]);
     }
 
     public function win_game($money, $coefficient)
