@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Models\FootballMatch;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
 
 class HomeController
 {
@@ -11,14 +13,27 @@ class HomeController
         return view('home.index');
     }
 
-    public function calculate()
+    public function calculate(Request $request)
     {
-        $team = $_POST['team'];
-        $money = $_POST['money']; //300
+
+        $validator = Validator::make($request->all(), [
+            'team' => 'required|string',
+            'money' => 'required|numeric|min:1',
+        ]);
+
+        // Перевірка на помилки
+        if ($validator->fails()) {
+            return redirect()->back()
+                ->withErrors($validator)
+                ->withInput();
+        }
+
+        $team = $request->input('team');
+        $money = $request->input('money');
         $test_arr = [];
         $test_arr2 = [];
         $test_arr3 = [];
-        $test_arr4 = [];
+        $test_arr4 = [0];
         $result = 0;
         $total_money = 0; //0
         $viktory = true;
@@ -144,7 +159,6 @@ class HomeController
                         $result += $this->win_game($money, $fmatch->coefficient_team_first); //363 //1487
                         $total_money += $result - $money + $sum; //363-300=63 //-237+1487-1229=21
                         $viktory = true;
-                        array_push($test_arr4, $umhave);
                         $umhave = 0;
                         $sum = 0;
                     } else {
@@ -166,8 +180,6 @@ class HomeController
                         $result += $this->win_game($money, $fmatch->coefficient_team_second); //363 //1487
                         $total_money += $result - $money + $sum; //363-300=63 //-237+1487-1229=21
                         $viktory = true;
-                        array_push($test_arr4, $umhave);
-                        $umhave = 0;
                         $sum = 0;
                     } else {
                         $result += $this->lose_game($money); //-300
@@ -176,6 +188,8 @@ class HomeController
                     }
                 }
             }
+            array_push($test_arr4, $umhave);
+            if ($viktory) { $umhave = 0; }
             $test_arr[$fmatch->match_date] = $total_money;
             $test_arr2[$fmatch->match_date] = $money;
             $test_arr3[$fmatch->match_date] = $sum;
@@ -187,6 +201,7 @@ class HomeController
         $umhave = $umhave + $_POST["money"];
 
         return view('home.index', ['matches' => $matches, 'team' => $team, 'money' => $money, 'test_arr' => $test_arr, 'test_arr2' => $test_arr2, 'test_arr3' => $test_arr3, 'test_arr4' => $test_arr4, 'result' => $umhave]);
+        //return redirect()->back()->withInput()->with(['matches' => $matches, 'team' => $team, 'money' => $money, 'test_arr' => $test_arr, 'test_arr2' => $test_arr2, 'test_arr3' => $test_arr3, 'test_arr4' => $test_arr4, 'result' => $umhave]);
     }
 
     public function win_game($money, $coefficient)

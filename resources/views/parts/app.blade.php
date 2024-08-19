@@ -28,6 +28,11 @@
                 <li><a href="/">Another</a></li>
             </ul>
         </nav>
+
+        <div class="oldlinks">
+            <a class="link_attention" href="#">Get Started</a>
+            <a class="link_ghost" href="#">More one</a>
+        </div>
     </div>
 </header>
 <div class="container flex-grow-1">
